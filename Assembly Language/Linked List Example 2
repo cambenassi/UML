@@ -1,0 +1,28 @@
+	.data
+nodes:	.word	-1:10	#5-node space
+avail:	.word 	
+
+	.text
+
+	li	$v0, 0		#avail = 0
+	li	$t9, 5		#n = 20	
+	addi	$t0, $t9, -1	#i = n-1
+	
+rept:
+	blt	$t0, 0, done
+	
+	sll	$s0, $t0, 3	#$s0 = i * 8 (byte)
+	sw	$t0, nodes($s0)	#newp->data = i
+	sw	$v0, nodes+4($s0)  #newp->next = avail
+	
+	la	$v0, nodes
+	add	$v0, $v0, $s0
+	#move	$v0, $s0
+	
+	addi	$t0, $t0, -1	#i--
+	b	rept	
+	
+done:
+	jr	$ra
+	
+	

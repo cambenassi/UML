@@ -1,0 +1,19 @@
+	.data
+	
+l1:	.word	9,0
+l2:	.word	3,0
+l3:	.word	25,0
+
+myList:	.word	-1
+
+	.text
+	
+	la	$t1, l1
+	la	$t2, l2
+	la 	$t3, l3
+	
+	sw	$t1, l2+4	#l1 points to l3 which is t3
+	sw	$t3, l1+4	#l3 points to l2 which is t2
+	sw	$0, l3+4	#l2 points to null which is $0
+	
+	sw	$t2, myList

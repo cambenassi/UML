@@ -1,0 +1,765 @@
+	.data
+# NULL or 0 in tokTab prematurely terminates dumping
+#   tokTab. Use blanks instead.
+TOKEN:		.word 	0x20202020:3			# 2-word TOKEN & its TYPE
+tokTab:		.word	0x20202020:60			# 20-token space with blanks
+symTab:		.word	0x20202020:80			# 20-token space with blanks
+
+LOC:	.word	0x0400
+SYMTAB_IDX:   .word  0x0   # index itno symTab table
+
+saveReg: .word	0:4
+
+inBuf:		.space	80
+pound:		.byte	'#' # end an input line with '#'
+colon:		.byte 	':'
+comma:          .byte   ','
+
+st_prompt:	.asciiz	"Enter a new input line. \n"
+st_error:	.asciiz	"An error has occurred. \n"	
+tabHead:	.asciiz "  TOKEN        TYPE\n"
+symTabHead:	.asciiz "symTab:            \n"
+tokPrint:	.word	0:3
+symPrint:       .word   0:4
+LF:		.asciiz "\n"
+
+	
+	.text
+#######################################################################
+#
+# Main
+#
+#	read an input line
+#	call scanner driver
+#	clear buffers
+#
+#############################################
+	
+newline:
+	jal	getline			# get a new input string
+	la      $t1, scannerDriver	
+	jalr  	$v0, $t1
+
+	li	$s0, 0                  # i index i=0 into tokTab
+	
+	lb      $t1, tokTab($s0)
+	lb      $t2, pound
+	beq     $t1, $t2, exit
+	
+nextTok:
+
+	bge	$s0, 240, exit		# check for tokTab size
+	
+	lb      $t1, tokTab+12($s0)     # check next token
+	lb      $t2, colon
+	bne     $t1, $t2, operator 	# if tokTab[i+1][0] != ':' goto operator
+	
+	li      $a0, 1
+	la     	$t5, VAR
+	jalr 	$v0, $t5                # index arg is stored in $s0, flag arg is in a1
+	add 	$s0, $s0, 24            # i += 2 - skip next token
+	
+operator:
+        li   	$t3,  1                 #isComma = true
+
+chkVar:
+
+	bge	$s0, 240, exit		# check for tokTab size
+	
+	lb      $t1, tokTab($s0)            
+	lb      $t2, pound
+	beq     $t1, $t2, dump          #if tokTab[][] = '#' goto dump
+	
+	beq     $t3, 1, nextVar         # if isComma goto nextVar
+	lb	$t1, tokTab+11($s0)
+	subi    $t1, $t1, 0x30
+	bne     $t1, 0x2, nextVar		# if tokTab[][1] != '2' goto nextVar
+	
+	li      $a0, 0
+        la      $t5, VAR
+        jalr 	$v0, $t5               # index is stored in $s0, flag is in a0
+
+nextVar:
+	add     $s0, $s0, 12
+        li 	$t3, 0                  # reset isComma to zero
+        lb      $t2, comma
+     	lb      $t1, tokTab($s0)
+        seq     $t3, $t1, $t2           # if tokTab[[] = ',' set t3 (isComma) as true
+        
+        b 	chkVar
+        
+dump:	#jal	printIn
+	#jal	printTokTab
+	jal     printSymTab
+	jal	clearTokTab
+	jal	clearInBuf		# clear input buffer
+	lw      $t1, LOC		# LOC+=4
+	add     $t1, $t1, 4
+	sw      $t1, LOC
+	b 	newline
+	
+exit:	#jal	printTokTab
+	#jal     printSymTab
+	li	$v0, 10
+	syscall
+
+VAR:
+        move    $t7, $a0  # store flag in t7
+        
+        lw 	$a0, tokTab($s0)
+	lw	$a1, tokTab+4($s0)
+        jal 	srchSymTab
+        move    $a0, $t7   # restore flag back
+        bge     $v1, 0, second_occurence # if found, this is seond occurence
+        
+saveSymTab:
+        # Save the token at index $s0 into symTab at the index s1
+        # also stores the flag from a0
+        lw      $s1, SYMTAB_IDX
+	lw      $t1, tokTab($s0)
+	sw      $t1, symTab($s1)
+	lw      $t1, tokTab+4($s0)
+	sw      $t1, symTab+4($s1)
+	lw      $t1, LOC
+	sw      $t1, symTab+8($s1)
+	move    $t1, $a0     # flag is kept in $a0
+	or      $t1, $t1, 0x4     #newStatus
+	sw      $t1, symTab+12($s1)
+	move    $v1, $s1
+	add 	$s1, $s1, 16     # SYMTAB_IDX++
+	sw    	$s1, SYMTAB_IDX
+	b       retVar
+	
+second_occurence:
+	
+	lw      $t2, symTab+12($v1) #oldStatus
+	and     $t1, $t2, 0x2 # newStatus
+	lw      $t2, symTab+12($v1)
+	and     $t2, $t2, 0x1
+	sll     $t2, $t2, 1
+	or      $t1, $t1, $t2
+	or      $t1, $t1, $a0   # set D flag
+	sw      $t1, symTab+12($v1) #newStatus saved
+	
+retVar:
+
+        move  	$a0, $t1   # a0 is the new status
+        move 	$a1, $v1   # index into symTab
+        la	$t3, symActs
+        jalr 	$s7, $t3    #return value is loaded into v1
+        
+	jr      $v0
+
+
+	# Searches thriugh the whole symTab
+	# a0, a1 - TOKEN passed in two registers
+	# v1     - returned index
+srchSymTab:
+	li	$t0, 0				# index to SymTab
+	lw      $t3, SYMTAB_IDX                 # max size of the table
+symSrch:
+        bge     $t0, $t3, symNotFound
+	lw	$t1, symTab($t0)
+	lw	$t2, symTab+4($t0)
+
+	bne	$t1, $a0, symContinue
+	beq	$t2, $a1, symFound
+symContinue:
+	addi	$t0, $t0, 16
+	b 	symSrch
+symFound:
+	move	$v1, $t0		# return index
+	jr      $ra
+symNotFound:
+        li      $v1, -1
+	jr	$ra
+
+
+#      accepts following args a0 - new status, a1 index
+#      returns v1
+symActs:
+       	#save regsters
+       	sw $s0, saveReg+0
+      	sw $s1, saveReg+4
+
+       	move    $s1, $a0   # new status
+       	
+       	# s1 is new status value
+	la $s0, symACTS
+	sll $s1, $s1, 2
+	add $s0, $s0, $s1
+	jr $s0
+	
+retSymAct:
+	#restore registers
+	lw $s0, saveReg+0
+	lw $s1, saveReg+4
+	jr $s7
+	
+symACTS:	
+	b	symACT0
+	b	symACT1
+	b	symACT2
+	b	symACT3
+	b	symACT4
+	b	symACT5
+	
+symACT0:
+        lw   	$t1, LOC
+        lw      $v1, symTab+8($a1) #old value to return
+        sw      $t1, symTab+8($a1)
+	b 	retSymAct
+	
+symACT1:
+        lw   	$t1, LOC
+        lw      $v1, symTab+8($a1) #old value to return
+        sw      $t1, symTab+8($a1)
+	b 	retSymAct
+
+symACT2:
+        lw      $v1, symTab+8($a1) #old value to return
+	b 	retSymAct
+	
+symACT3:
+        # print doube definition errr
+        li      $v1, -1
+	b 	retSymAct
+	
+symACT4:
+        lw   	$t1, LOC
+        sw      $t1, symTab+8($a1)
+        li      $v1, -1
+	b 	retSymAct
+symACT5:
+        lw   	$t1, LOC
+        sw      $t1, symTab+8($a1)
+        li      $v1, 0
+	b 	retSymAct
+	
+
+####################### Scanner Driver HW3 #################
+##############################################
+#
+# Accesses globals inBuf and tokTab
+#
+##############################################
+	
+scannerDriver:
+                                        # save registers
+	li	$t5,0			# $t5: index to inBuf
+	li	$a3,0			# $a3: index to tokTab
+
+	# State table driver
+	la	$s1, Q0			# initial state Q0
+nextState:	
+
+	lw	$s2, 0($s1)		# get the action routine
+	jalr	$v1, $s2		# execute the action
+
+	sll	$s0, $s0, 2		# compute byte offset of T
+	add	$s1, $s1, $s0		# locate the next state
+	la	$s1, ($s1)
+	lw	$s1, ($s1)		# next State in $s1
+	sra	$s0, $s0, 2		# reset $s0 for T
+	b	nextState		# go to the next state
+	
+exitState:
+	jr     $v0
+	
+####################### STATE ACTION ROUTINES #####################
+##############################################
+#
+# ACT1:
+#	$t5: global -- index into inBuf
+#	$s0: T = char type returns in $s0
+#
+##############################################
+ACT1: 
+	lb	$a0, inBuf($t5)			# $a0: next char
+	jal	lin_search			# $s0: T (char type)
+	addi	$t5, $t5, 1			# $t5++
+	jr	$v1
+	
+###############################################
+#
+# ACT2:
+#	save char to TOKEN for the first time
+#	save char type as Token type
+#	set remaining token space
+#
+#	$s3 -- char index into TOKEN
+#
+##############################################
+ACT2:
+	li	$s3, 0				# initialize index to TOKEN char 
+	sb	$a0, TOKEN($s3)			# save 1st char to TOKEN
+	addi	$t0, $s0, 0x30			# T in ASCII
+	sb	$t0, TOKEN+11($s3)		# save T as Token type
+	addi	$s3, $s3, 1
+	jr 	$v1
+	
+#############################################
+#
+# ACT3:
+#	collect char to TOKEN
+#	update remaining token space
+#
+#	$s3 -- char index into TOKEN
+#
+#############################################
+ACT3:
+	bgt	$s3, 7, lenError		# TOKEN length error
+	sb	$a0, TOKEN($s3)			# save char to TOKEN
+	addi	$s3, $s3, 1			# $s3: index to TOKEN
+	jr	$v1	
+lenError:
+	li	$s0, 7				# T=7 for token length error
+	jr	$v1
+					
+#############################################
+#
+#  ACT4:
+#	move TOKEN to tokTab
+#
+#	$a3 -- index into tokTab (increment by 12)
+#
+############################################
+ACT4:
+	lw	$t0, TOKEN($0)			# get 1st word of TOKEN
+	sw	$t0, tokTab($a3)		# save 1st word to tokTab
+	lw	$t0, TOKEN+4($0)		# get 2nd word of TOKEN
+	sw	$t0, tokTab+4($a3)		# save 2nd word to tokTab
+	lw	$t0, TOKEN+8($0)		# get Token Type
+	sw	$t0, tokTab+8($a3)		# save Token Type to tokTab
+	addi	$a3, $a3, 12			# update index to tokTab
+	
+	jal	clearTok			# clear 3-word TOKEN
+	jr	$v1
+
+############################################
+#
+#  RETURN:
+#	End of the input string
+#
+############################################
+RETURN:
+	sw	$zero, tokTab($a3)		# force NULL into tokTab
+						# restore registers
+	b	exitState		        # leave the state table
+
+
+#############################################
+#
+#  ERROR:
+#	Error statement and quit
+#
+############################################
+ERROR:
+        move    $t9, $v0                        #save link register
+	la	$a0, st_error			# print error occurrence
+	li	$v0, 4
+	syscall
+	move    $v0, $t9
+	b	exitState
+
+
+############################### BOOK-KEEPING FUNCTIONS #########################
+#############################################
+#
+#  clearTok:
+#	clear 3-word TOKEN after copying it to tokTab
+#
+#############################################
+clearTok:
+	li	$t9, 0x20202020
+	sw	$t9, TOKEN($0)
+	sw	$t9, TOKEN+4($0)
+	sw	$t9, TOKEN+8($0)
+
+	jr	$ra
+	
+#############################################
+#
+#  printline:
+#	Echo print input string
+#
+#############################################
+printline:
+	la	$a0, inBuf			# input Buffer address
+	li	$v0,4
+	syscall
+	jr	$ra
+
+#############################################
+#
+#  printSymTab:
+#	Print the context of the symTab
+#
+#############################################
+printSymTab:
+	la	$a0, symTabHead			# table heading
+	li	$v0, 4
+	syscall
+     
+	li	$t0, 0				# index into symTab for printing
+	lw      $t2, SYMTAB_IDX                 # size of the table
+
+prSymNext:	
+	bge	$t0, $t2, prSymExit           
+	lw	$t1, symTab($t0)
+	sw	$t1, symPrint
+	lw	$t1, symTab+4($t0)
+	sw	$t1, symPrint+4
+	la	$a0, symPrint			# print symTab token
+	li	$v0, 4
+	syscall
+	
+	li	$a0, 32	   # print space		
+	li	$v0, 11
+	syscall 
+	
+	lw	$t1, symTab+8($t0)
+	move    $a0, $t1                 
+   	li      $v0, 34                  # syscall number for "print hex"
+    	syscall 
+    	
+	li	$a0, 32	   # print space		
+	li	$v0, 11
+	syscall 
+    	 
+   	lw	$t1, symTab+12($t0)
+	move    $a0, $t1                 
+   	li      $v0, 34                  # syscall number for "print hex"
+    	syscall   	
+	
+	la	$a0, 10
+	li      $v0, 11
+	syscall
+	
+	li	$t9, 0x20202020
+	sw	$t9, symPrint
+	sw	$t9, symPrint+4
+	sw	$t9, symPrint+8
+	sw	$t9, symPrint+12
+	
+	addi	$t0, $t0, 16			# next entry in symTab
+	b      	prSymNext
+
+prSymExit:
+	jr	$ra
+
+
+#############################################
+#
+#  printTokArray:
+#	print Token array header
+#	print each token entry
+#
+#############################################
+printTokTab:
+	la	$a0, tabHead			# table heading
+	li	$v0, 4
+	syscall
+
+	li	$t0, 0				# index into tokTab for printing
+	li	$v0, 4
+prNext:	
+	bge	$t0, $a3, prExit
+	lw	$t1, tokTab($t0)
+	sw	$t1, tokPrint
+	lw	$t1, tokTab+4($t0)
+	sw	$t1, tokPrint+4
+	lw	$t1, tokTab+8($t0)
+	sw	$t1, tokPrint+8
+
+	la	$a0, tokPrint			# print tokTab
+	syscall
+	
+	la	$a0, LF
+	syscall
+	
+	li	$t9, 0x20202020
+	sw	$t9, tokPrint
+	sw	$t9, tokPrint+4
+	sw	$t9, tokPrint+8
+	
+	addi	$t0, $t0, 12			# next entry in tokTab
+	b      	prNext
+
+prExit:
+	jr	$ra
+
+############################################
+#
+#  clearInBuf:
+#	clear inbox
+#
+############################################
+clearInBuf:
+	li	$t0,0
+loopInB:
+	bge	$t0, 80, doneInB
+	sw	$zero, inBuf($t0)		# clear inBuf to 0x0
+	addi	$t0, $t0, 4
+	b	loopInB
+doneInB:
+	jr	$ra
+	
+###########################################
+#
+# clearTokArray:
+#	clear Token Array
+#
+###########################################
+clearTokTab:
+	li	$t0, 0
+	li	$t1, 0x20202020			# intialized with blanks
+loopCTok:
+	bge	$t0, $a3, doneCTok
+	sw	$t1, tokTab($t0)		# clear
+	sw	$t1, tokTab+4($t0)		#  3-word entry
+	sw	$t1, tokTab+8($t0)		#  in tokTab
+	addi	$t0, $t0, 12
+	b	loopCTok
+doneCTok:
+	jr	$ra
+	
+
+###################################################################
+#
+#  getline:
+#	get input string into inbox
+#
+###################################################################
+getline: 
+	la	$a0, st_prompt			# Prompt to enter a new line
+	li	$v0, 4
+	syscall
+
+	la	$a0, inBuf			# read a new line
+	li	$a1, 80	
+	li	$v0, 8
+	syscall
+	jr	$ra
+
+
+##################################################################
+#
+#  lin_search:
+#	Linear search of Tabchar
+#
+#   	$a0: char key
+#   	$s0: char type, T
+#
+#################################################################
+lin_search:
+	li	$t0,0				# index to Tabchar
+	li	$s0, 7				# return value, type T
+loopSrch:
+	lb	$t1, Tabchar($t0)
+	beq	$t1, 0x7F, charFail
+	beq	$t1, $a0, charFound
+	addi	$t0, $t0, 8
+	b	loopSrch
+
+charFound:
+	lw	$s0, Tabchar+4($t0)		# return char type
+charFail:
+	jr	$ra
+
+
+	
+	
+	.data
+
+STAB:
+Q0:     .word  ACT1
+        .word  Q1   # T1
+        .word  Q1   # T2
+        .word  Q1   # T3
+        .word  Q1   # T4
+        .word  Q1   # T5
+        .word  Q1   # T6
+        .word  Q11  # T7
+
+Q1:     .word  ACT2
+        .word  Q2   # T1
+        .word  Q5   # T2
+        .word  Q3   # T3
+        .word  Q3   # T4
+        .word  Q0   # T5
+        .word  Q4   # T6
+        .word  Q11  # T7
+
+Q2:     .word  ACT1
+        .word  Q6   # T1
+        .word  Q7   # T2
+        .word  Q7   # T3
+        .word  Q7   # T4
+        .word  Q7   # T5
+        .word  Q7   # T6
+        .word  Q11  # T7
+
+Q3:     .word  ACT4
+        .word  Q0   # T1
+        .word  Q0   # T2
+        .word  Q0   # T3
+        .word  Q0   # T4
+        .word  Q0   # T5
+        .word  Q0   # T6
+        .word  Q11  # T7
+
+Q4:     .word  ACT4
+        .word  Q10  # T1
+        .word  Q10  # T2
+        .word  Q10  # T3
+        .word  Q10  # T4
+        .word  Q10  # T5
+        .word  Q10  # T6
+        .word  Q11  # T7
+
+Q5:     .word  ACT1
+        .word  Q8   # T1
+        .word  Q8   # T2
+        .word  Q9   # T3
+        .word  Q9   # T4
+        .word  Q9   # T5
+        .word  Q9   # T6
+        .word  Q11  # T7
+
+Q6:     .word  ACT3
+        .word  Q2   # T1
+        .word  Q2   # T2
+        .word  Q2   # T3
+        .word  Q2   # T4
+        .word  Q2   # T5
+        .word  Q2   # T6
+        .word  Q11  # T7
+
+Q7:     .word  ACT4
+        .word  Q1   # T1
+        .word  Q1   # T2
+        .word  Q1   # T3
+        .word  Q1   # T4
+        .word  Q1   # T5
+        .word  Q1   # T6
+        .word  Q11  # T7
+
+Q8:     .word  ACT3
+        .word  Q5   # T1
+        .word  Q5   # T2
+        .word  Q5   # T3
+        .word  Q5   # T4
+        .word  Q5   # T5
+        .word  Q5   # T6
+        .word  Q11  # T7
+
+Q9:     .word  ACT4
+        .word  Q1  # T1
+        .word  Q1  # T2
+        .word  Q1  # T3
+        .word  Q1  # T4
+        .word  Q1  # T5
+        .word  Q1  # T6
+        .word  Q11 # T7
+
+Q10:	.word	RETURN
+        .word  Q10  # T1
+        .word  Q10  # T2
+        .word  Q10  # T3
+        .word  Q10  # T4
+        .word  Q10  # T5
+        .word  Q10  # T6
+        .word  Q11  # T7
+
+Q11:    .word  ERROR 
+	.word  Q4  # T1
+	.word  Q4  # T2
+	.word  Q4  # T3
+	.word  Q4  # T4
+	.word  Q4  # T5
+	.word  Q4  # T6
+	.word  Q4  # T7
+	
+	
+Tabchar: 
+	.word ' ', 5
+ 	.word '#', 6
+ 	.word '$', 4 
+	.word '(', 4
+	.word ')', 4 
+	.word '*', 3 
+	.word '+', 3 
+	.word ',', 4 
+	.word '-', 3 
+	.word '.', 4 
+	.word '/', 3 
+
+	.word '0', 1
+	.word '1', 1 
+	.word '2', 1 
+	.word '3', 1 
+	.word '4', 1 
+	.word '5', 1 
+	.word '6', 1 
+	.word '7', 1 
+	.word '8', 1 
+	.word '9', 1 
+
+	.word ':', 4 
+
+	.word 'A', 2
+	.word 'B', 2 
+	.word 'C', 2 
+	.word 'D', 2 
+	.word 'E', 2 
+	.word 'F', 2 
+	.word 'G', 2 
+	.word 'H', 2 
+	.word 'I', 2 
+	.word 'J', 2 
+	.word 'K', 2
+	.word 'L', 2 
+	.word 'M', 2 
+	.word 'N', 2 
+	.word 'O', 2 
+	.word 'P', 2 
+	.word 'Q', 2 
+	.word 'R', 2 
+	.word 'S', 2 
+	.word 'T', 2 
+	.word 'U', 2
+	.word 'V', 2 
+	.word 'W', 2 
+	.word 'X', 2 
+	.word 'Y', 2
+	.word 'Z', 2
+
+	.word 'a', 2 
+	.word 'b', 2 
+	.word 'c', 2 
+	.word 'd', 2 
+	.word 'e', 2 
+	.word 'f', 2 
+	.word 'g', 2 
+	.word 'h', 2 
+	.word 'i', 2 
+	.word 'j', 2 
+	.word 'k', 2
+	.word 'l', 2 
+	.word 'm', 2 
+	.word 'n', 2 
+	.word 'o', 2 
+	.word 'p', 2 
+	.word 'q', 2 
+	.word 'r', 2 
+	.word 's', 2 
+	.word 't', 2 
+	.word 'u', 2
+	.word 'v', 2 
+	.word 'w', 2 
+	.word 'x', 2 
+	.word 'y', 2
+	.word 'z', 2
+
+	.word 0x7F, 0

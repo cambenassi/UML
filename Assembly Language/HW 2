@@ -1,0 +1,233 @@
+	.data
+	
+inBuf:	.space	80
+outBuf:	.space	80
+endl:	.asciiz	"    \n"
+		
+Tabchar: 	.word 	0x0a, 6		# LF
+	.word 	' ', 5
+ 	.word 	'#', 6
+	.word 	'$', 4
+	.word 	'(', 4 
+	.word 	')', 4 
+	.word 	'*', 3 
+	.word 	'+', 3 
+	.word 	',', 4 
+	.word 	'-', 3 
+	.word 	'.', 4 
+	.word 	'/', 3 
+
+	.word 	'0', 1
+	.word 	'1', 1 
+	.word 	'2', 1 
+	.word 	'3', 1 
+	.word 	'4', 1 
+	.word 	'5', 1 
+	.word 	'6', 1 
+	.word 	'7', 1 
+	.word 	'8', 1 
+	.word 	'9', 1 
+
+	.word 	':', 4 
+
+	.word 	'A', 2
+	.word 	'B', 2 
+	.word 	'C', 2 
+	.word 	'D', 2 
+	.word 	'E', 2 
+	.word 	'F', 2 
+	.word 	'G', 2 
+	.word 	'H', 2 
+	.word 	'I', 2 
+	.word 	'J', 2 
+	.word 	'K', 2
+	.word 	'L', 2 
+	.word 	'M', 2 
+	.word 	'N', 2 
+	.word 	'O', 2 
+	.word 	'P', 2 
+	.word 	'Q', 2 
+	.word 	'R', 2 
+	.word 	'S', 2 
+	.word 	'T', 2 
+	.word 	'U', 2
+	.word 	'V', 2 
+	.word 	'W', 2 
+	.word 	'X', 2 
+	.word 	'Y', 2
+	.word 	'Z', 2
+
+	.word 	'a', 2 
+	.word 	'b', 2 	
+	.word 	'c', 2 
+	.word 	'd', 2 
+	.word 	'e', 2 
+	.word 	'f', 2 
+	.word 	'g', 2 
+	.word 	'h', 2 
+	.word 	'i', 2 
+	.word 	'j', 2 
+	.word 	'k', 2
+	.word 	'l', 2 
+	.word 	'm', 2 
+	.word 	'n', 2 
+	.word 	'o', 2 
+	.word 	'p', 2 
+	.word 	'q', 2 
+	.word 	'r', 2 
+	.word 	's', 2 
+	.word 	't', 2 
+	.word 	'u', 2
+	.word 	'v', 2 
+	.word 	'w', 2 
+	.word 	'x', 2 
+	.word 	'y', 2
+	.word 	'z', 2
+
+	.word	0x5c, -1	# if you ‘\’ as the end-of-table symbol
+
+
+	.text
+	
+newInput:
+	jal	getline		# getline()
+	li	$s1, 0		# i=0
+loop:
+	bge	$s1, 80, dump	# if (i>= 80) goto dump
+	lb	$t1, inBuf($s1)	# key = inBuf[i]
+				
+	jal	lin_search	# $t9 = lin_search($t1)
+	move 	$t9, $a3
+	addi	$t9, $t9, 0x30	# char(chType)oo
+	sb	$t9, outBuf($s1)
+	
+	beq	$t1, '#', dump	# if (key=='#') exit
+				
+	addi	$s1, $s1, 1	# i++
+	b	loop
+			 
+dump:	
+	jal	printOutBuf
+	jal	clearBufs
+				
+	b	newInput
+	
+	
+###################
+#
+# getline()
+# arguments - none
+# return value - returns inBuf, an array of characters
+#
+###################
+	.data
+prompt:	.asciiz	"Enter an input string: "
+
+	.text
+getline: 
+	la	$a0, prompt		# Prompt to enter a new line
+	li	$v0, 4
+	syscall
+
+	la	$a0, inBuf		# read a new line
+	li	$a1, 80	
+	li	$v0, 8
+	syscall
+
+	jr	$ra
+
+
+###################
+#
+# lin_search()
+# arguments - $t1 for key
+# return value - $t9 for char type
+#
+###################
+
+lin_search:
+	li	$t0, 0	#i = 0
+	li	$t9, 0	#found = 0
+	
+rept:
+	bne	$t9, 0 ret		#if(found) goto ret
+	bge	$t0, 80 ret		#if(i >= 80) goto ret
+	
+	sll 	$t0, $t0, 3		#i * 8
+	lw	$t7, Tabchar($t0)	#$t7 = Tabchar[i]
+	srl 	$t0, $t0, 3		#i / 8
+	
+	bne 	$t7, $t1 next		#if(Tabchar[i] != key) goto next
+	li	$t9, 1			#found = 1
+
+next:
+	addi 	$t0, $t0, 1		#i++
+	b 	rept		
+	
+ret:	
+	sll 	$t0, $t0, 3		#i / 8
+	subi 	$t0, $t0, 4		#i - 4
+	lw	$t7, Tabchar($t0)	#$t7 = Tabchar[i]
+	
+	move 	$a3, $t7		#$a3 = $t7
+	beq	$t9, 0 notF		#if(!found) goto notF
+	jr	$ra			
+	
+notF:
+	li	$a3, -1			#return -1
+	jr	$ra
+
+	
+###################
+#
+# printOutBuf()
+# arguments - none
+# return value - none
+#
+###################
+printOutBuf:
+	
+	li	$s0, 0			#i = 0
+	
+removeSpace:
+	bge	$s0, 80, print		#if(i >= 80) goto print
+	lb	$s2, outBuf($s0)	#$s2 = outBuf[i]
+	beq	$s2, '6' print		#if(outBuf[i] == '#') goto print
+	beq	$s2, '5' replaceSpace	#if(outBuf[i] == ' ') goto replaceSpace
+	addi	$s0, $s0, 1		#i++
+	b	removeSpace		#loop
+
+replaceSpace:
+	lb	$s3, inBuf($s0)		#$s3 = inBuf[i]
+	sb 	$s3, outBuf($s0)	#outBuf[i] = $s3
+	addi 	$s0, $s0, 1		#i++
+	b	removeSpace		#back to loop
+	
+print:
+	li	$v0, 4			#tells system to print a string
+	la	$a0, outBuf		#loads outBuf to $a0
+	syscall				#prints
+	la 	$a0, endl		#loads a string to print a newline character
+	syscall
+
+	jr	$ra
+	
+	
+###################
+#
+# clearBufs()
+# arguments - none
+# return value - none
+#
+###################
+clearBufs:
+	li	$s6, 0			#i = 0
+	li	$s7, 0
+clear_buffer_loop:	
+	bge	$s6, 80 done		#if(i >= 80)goto done
+	sb	$s7, inBuf($s6)		#$s4 = inBuf[i]
+	sb	$s7, outBuf($s6)		#$s5 = outBuf[i]
+	addi	$s6, $s6, 1		#i++
+	b	clear_buffer_loop	#back to loop
+done:
+	jr $ra	
