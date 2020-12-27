@@ -1,0 +1,10 @@
+Although all the code is in place, I could not get it to work all together.
+
+There are also a couple memory leaks, which are because of some geneirc_vecotr_init_defaults() in some of the AVL code that I could not find.
+I have been working on this lab almost exclusively for the past two weeks, and although I could not finish, I am proud of the progress I made.
+I went to the online tutoring center at least twice a week to help with my problems, and was focused on it constatly during the weeks leading
+up to this due date. Although I could not finish, this lab still 100% made me a better programmer, and I'm glad we were assigned to do it.
+
+
+The code included is my submission for Lab 7 and Lab 8
+-Cam
