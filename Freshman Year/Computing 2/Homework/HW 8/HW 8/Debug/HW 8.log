@@ -1,0 +1,3 @@
+﻿  main.c
+C:\Users\Cam\Desktop\HW 8\HW 8\main.c(7,1): warning C4047: 'initializing': 'Status *' differs in levels of indirection from 'int'
+  HW 8.vcxproj -> C:\Users\Cam\Desktop\HW 8\Debug\HW 8.exe
