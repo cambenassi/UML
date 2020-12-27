@@ -1,0 +1,12 @@
+﻿  bit_flags.c
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(31,30): warning C4013: 'malloc' undefined; assuming extern returning int
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(54,36): warning C4013: 'realloc' undefined; assuming extern returning int
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(56,9): warning C4013: 'free' undefined; assuming extern returning int
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(48,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(77,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(118,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(125,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+D:\Computing II\Code\PA's\PA 1\PA 1\bit_flags.c(132,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+  main.c
+  Generating Code...
+  PA 1.vcxproj -> D:\Computing II\Code\PA's\PA 1\Debug\PA 1.exe

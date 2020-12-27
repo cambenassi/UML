@@ -1,0 +1,8 @@
+﻿  bit_flags.c
+D:\Computing II\Code\PA's\PA 3 v2\PA 3 v2\bit_flags.c(35,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+D:\Computing II\Code\PA's\PA 3 v2\PA 3 v2\bit_flags.c(78,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+D:\Computing II\Code\PA's\PA 3 v2\PA 3 v2\bit_flags.c(86,1): warning C4047: 'initializing': 'vector *' differs in levels of indirection from 'BIT_FLAGS *'
+  main.c
+D:\Computing II\Code\PA's\PA 3 v2\PA 3 v2\main.c(18,2): error C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\Computing II\Code\PA's\PA 3 v2\PA 3 v2\main.c(22,3): error C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  Generating Code...
