@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include "unit_test.h"
+
+int main(int argc, char* argv[])
+{
+  /*
+  Status (*tests[])(char*, int) =
+    {
+      test_init_default_returns_nonNULL,
+      test_get_size_on_init_default_returns_0,
+      test_cbenassi_destroy_test,
+      test_cbenassi_get_capacity_test,
+      test_cbenassi_get_size_test,
+      test_cbenassi_init_c_string_test,
+      test_cbenassi_compare_test,
+      test_cbenassi_extraction_test,
+      test_cbenassi_insertion_test,
+      test_cbenassi_push_back_test,
+      test_cbenassi_pop_back_test,
+      test_cbenassi_string_at_test,
+      test_cbenassi_c_str,
+      test_cbenassi_concat_test,
+      test_cbenassi_string_empty_test,
+      test_cbenassi_empty_with_string,
+      test_cbenassi_concat_with_nothing,
+      test_cbenassi_pop_back_at_null_terminator,
+      test_cbenassi_my_string_at_invalid,
+      test_cbenassi_concat_first_string_empty,
+      test_cbenassi_destroy_empty_list
+    };
+  int number_of_functions = sizeof(tests) / sizeof(tests[0]);
+  int i;
+  char buffer[500];
+  int success_count = 0;
+  int failure_count = 0;
+  
+  for(i=0; i<number_of_functions; i++)
+    {
+      if(tests[i](buffer, 500) == FAILURE)
+	{
+	  printf("FAILED: Test %d failed miserably\n", i + 1);
+	  printf("\t%s\n", buffer);
+	  failure_count++;
+	}
+      else
+	{
+	   //printf("PASS: Test %d passed\n", i);
+	   // printf("\t%s\n", buffer);
+	  success_count++;
+	}
+    }
+  printf("Total number of tests: %d\n", number_of_functions);
+  printf("%d/%d Pass, %d/%d Failure\n", success_count,
+	 number_of_functions, failure_count, number_of_functions);
+  */
+  
+
+  /*
+  MY_STRING array[100];
+
+  for (int i = 0; i < 100; i++){
+    array[i] = NULL;
+  }
+  
+  array[0] = my_string_init_c_string("COPY ME!");
+  for(int j = 1; j < 100; j++){
+    array[j] = my_string_init_default();
+    my_string_assignment(array[j], array[0]);
+  }
+  
+  for(int k = 0; k < 100; k++){
+    my_string_insertion(array[k], stdout);
+    my_string_destroy(&array[k]);
+    printf("\n");
+  }
+  */	
+  
+  VECTOR dictionary[30];
+
+  
+
+  return 0;
+}

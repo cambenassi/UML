@@ -1,0 +1,12 @@
+﻿  main.c
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(25,12): warning C4473: 'scanf_s' : not enough arguments passed for format string
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(25,12): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(25,12): message : the missing variadic argument 2 is required by format string '%c'
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(25,12): message : this argument is used as a buffer size
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(28,17): warning C4047: '=': 'char' differs in levels of indirection from 'void *'
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(58,12): warning C4473: 'scanf_s' : not enough arguments passed for format string
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(58,12): message : placeholders and their parameters expect 2 variadic arguments, but 1 were provided
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(58,12): message : the missing variadic argument 2 is required by format string '%c'
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(58,12): message : this argument is used as a buffer size
+C:\Users\Cam\Desktop\HW 7\HW 7\main.c(59,15): warning C4047: '=': 'char' differs in levels of indirection from 'void *'
+  HW 7.vcxproj -> C:\Users\Cam\Desktop\HW 7\Debug\HW 7.exe
