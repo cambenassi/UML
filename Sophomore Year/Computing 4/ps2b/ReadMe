@@ -1,0 +1,42 @@
+/**********************************************************************
+ *  N-Body Simulation ps2b-readme.txt template
+ **********************************************************************/
+
+Name: Cameron Benassi
+
+Hours to complete assignment: 5
+/**********************************************************************
+ *  Briefly discuss the assignment itself and what you accomplished.
+ **********************************************************************/
+In this assignment, I took what i made in PS2a and added a physics
+simulation to it. New functions were added to calculate x and Y velocity, 
+along with new positions to accomidate for them. A step function was created,
+and with the parameter "seconds", it was able to calculate new values for
+the sprite's location based on all the planets around it. "Seconds" is
+a double variable which is the increment of time in the simulation,
+which is scanned in as a command line argument, along with the total 
+desired runtime of the simulation.
+
+
+/**********************************************************************
+ *  If you created your own universe for extra credit, describe it
+ *  here and why it is interesting.
+ **********************************************************************/
+n/a
+
+
+
+/**********************************************************************
+ *  List whatever help (if any) you received from the instructor,
+ *  classmates, or anyone else.
+ **********************************************************************/
+none
+
+/**********************************************************************
+ *  Describe any serious problems you encountered.                    
+ **********************************************************************/
+issues with math equations
+
+/**********************************************************************
+ *  List any other comments here.                                     
+ **********************************************************************/
