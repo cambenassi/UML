@@ -1,0 +1,55 @@
+/**********************************************************************
+ *  N-Body Simulation ps2a-readme.txt template
+ **********************************************************************/
+
+Name: Cameron Benassi
+Hours to complete assignment: 5
+
+/**********************************************************************
+ *  Briefly discuss the assignment itself and what you accomplished.
+ **********************************************************************/
+In this assignment, classes, smart pointers, and the SFML library were
+used to create a model of the solar system. Raw data about each body
+along with an image file was loaded into a CelestialBody object, which was
+then pointed at by an array of smart pointers in the universe object,
+which was displayed by SFML.
+
+  /**********************************************************************
+ *  Discuss one or more key algorithms, data structures, or 
+ *  OO designs that were central to the assignment.
+ **********************************************************************/
+
+Some of the key ideas that were central to the assignment include 
+classes, inheritance, and polymorphism.
+
+
+
+/**********************************************************************
+ *  Briefly explain the workings of the features you implemented.
+ *  Describe if and how do you used the smart pointers 
+ *  Include code excerpts.
+ **********************************************************************/
+
+For loading each line of text into an object, the istream operator was 
+overloaded, and the data was put into CelestialBody objects. A vector
+of smart pointers were used to point at each of these objects. 
+
+
+/**********************************************************************
+ *  List whatever help (if any) you received from the instructor,
+ *  classmates, or anyone else.
+ **********************************************************************/
+
+none
+
+/**********************************************************************
+ *  Describe any serious problems you encountered.                    
+ **********************************************************************/
+
+Small issues with inheritance, along with an issue where overloaded
+>> function would not store data properly
+
+/**********************************************************************
+ *  List any other comments here.                                     
+ **********************************************************************/
+
