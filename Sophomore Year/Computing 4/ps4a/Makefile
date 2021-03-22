@@ -3,7 +3,7 @@ CFLAGS = -std=c++11 -c -g -Og -Wall -Werror -pedantic
 OBJ =  test.o CircularBuffer.o
 DEPS =  test.cpp CircularBuffer.cpp CircularBuffer.h
 LIBS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
-EXE = test
+EXE = ps4a
 
 
 all: $(OBJ)
