@@ -1,17 +1,17 @@
 #include <iostream>
 #include <stdint.h>
+#include <bits/stdc++.h>
 
 #include "CircularBuffer.h"
 
 //Constructors
 CircularBuffer::CircularBuffer(int capacity){
-    try {
-        if(capacity < 1)
-            throw std::invalid_argument("CircularBuffer constructor: capacity must be greater than zero.");
-    }
-    catch (const std::invalid_argument& e){
-        std::cout << "CircularBuffer constructor: capacity must be greater than zero.\n";
-    }
+    if(capacity < 1)
+        throw std::invalid_argument("CircularBuffer constructor: capacity must be greater than zero.");
+    
+
+    ringBuffer.resize(capacity);
+    ringBuffer.clear();
 }
 
 int CircularBuffer::size(){
@@ -26,50 +26,33 @@ bool CircularBuffer::isEmpty(){
 }
 
 bool CircularBuffer::isFull(){
-    if(ringBuffer.size() == ringBuffer.__capacity())
+    if(ringBuffer.size() == ringBuffer.capacity())
         return true;
     else
         return false;
 }
 
 void CircularBuffer::enqueue(int16_t x){
-    try{
-        if (isFull() == true){
-            throw std::runtime_error("enqueue: can't enqueue to a full ring");
-        }
-    }
-    catch (const std::runtime_error& e){
-        std::cout << "enqueue: can't enqueue to a full ring\n";
-    }
+    if (isFull() == true)
+        throw std::runtime_error("enqueue: can't enqueue to a full ring");
+        
 
     ringBuffer.push_back(x);
 }
 
 int16_t CircularBuffer::dequeue(){
-    try{
-        if (isEmpty() == true){
-            throw std::runtime_error("dequeue: can't dequeue to an empty ring");
-        }
-    }
-    catch (const std::runtime_error& e){
-        std::cout << "dequeue: can't dequeue to an empty ring\n";
-    }
-    
+    if (isEmpty() == true)
+        throw std::runtime_error("dequeue: can't dequeue to an empty ring");
+       
     int16_t temp = ringBuffer.front();
-    ringBuffer.pop_front();
+    ringBuffer.erase(ringBuffer.begin());
 
     return temp;
 }
 
 int16_t CircularBuffer::peek(){
-    try{
-        if (isEmpty() == true){
-            throw std::runtime_error("peek: can't peek to an empty ring");
-        }
-    }
-    catch (const std::runtime_error& e){
-        std::cout << "peek: can't peek to an empty ring\n";
-    }
+    if (isEmpty())
+        throw std::runtime_error("peek: can't peek to an empty ring");
 
     int16_t temp = ringBuffer.front();
     return temp;

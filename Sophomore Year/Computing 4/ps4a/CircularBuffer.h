@@ -1,7 +1,7 @@
 #ifndef CircularBuffer_h
 #define CircularBuffer_h
 
-#include <queue>
+#include <vector>
 #include <stdint.h>
 
 class CircularBuffer{
@@ -15,7 +15,7 @@ class CircularBuffer{
         int16_t peek();
 
         //data member
-        std::deque<int16_t> ringBuffer;
+        std::vector<int16_t> ringBuffer;
 };
 
 
