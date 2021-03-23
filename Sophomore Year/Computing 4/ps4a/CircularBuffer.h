@@ -1,12 +1,14 @@
-#ifndef CircularBuffer_h
-#define CircularBuffer_h
+// Copyright 2021 Cameron Benassi @ UML. All rights reserved.
 
-#include <vector>
+#ifndef _HOME_CAMBENASSI_DOCUMENTS_CODE_COMPUTING_IV_PS4A_CIRCULARBUFFER_H_
+#define _HOME_CAMBENASSI_DOCUMENTS_CODE_COMPUTING_IV_PS4A_CIRCULARBUFFER_H_
+
 #include <stdint.h>
+#include <vector>
 
 class CircularBuffer{
-    public:
-        CircularBuffer(int capacity);
+ public:
+        explicit CircularBuffer(int capacity);
         int size();
         bool isEmpty();
         bool isFull();
@@ -14,9 +16,9 @@ class CircularBuffer{
         int16_t dequeue();
         int16_t peek();
 
-        //data member
+        // Data member
         std::vector<int16_t> ringBuffer;
 };
 
 
-#endif
+#endif  // _HOME_CAMBENASSI_DOCUMENTS_CODE_COMPUTING_IV_PS4A_CIRCULARBUFFER_H_
