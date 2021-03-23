@@ -2,7 +2,6 @@
 
 #include "CircularBuffer.h"
 
-<<<<<<< Updated upstream
 #include <bits/stdc++.h>
 #include <stdint.h>
 
@@ -14,13 +13,6 @@ CircularBuffer::CircularBuffer(int capacity) {
         throw std::invalid_argument(
             "CircularBuffer constructor: capacity must be greater than zero.");
 
-=======
-//Constructors
-CircularBuffer::CircularBuffer(int capacity){
-    if(capacity < 1)
-        throw std::invalid_argument("CircularBuffer constructor: capacity must be greater than zero.");
-    
->>>>>>> Stashed changes
     ringBuffer.resize(capacity);
     ringBuffer.clear();
 }
@@ -47,11 +39,6 @@ bool CircularBuffer::isFull() {
 void CircularBuffer::enqueue(int16_t x) {
     if (isFull() == true)
         throw std::runtime_error("enqueue: can't enqueue to a full ring");
-<<<<<<< Updated upstream
-
-=======
-        
->>>>>>> Stashed changes
     ringBuffer.push_back(x);
 }
 
