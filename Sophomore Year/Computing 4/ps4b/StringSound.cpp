@@ -22,7 +22,7 @@ StringSound::StringSound(double frequency) {
 StringSound::StringSound(std::vector<sf::Int16> init){
     _cb = new CircularBuffer(init.size());
 
-    for(int i = 0; i < init.size(); i++){
+    for(long unsigned int i = 0; i < init.size(); i++){
         _cb->enqueue(init.at(i));
     }
 
