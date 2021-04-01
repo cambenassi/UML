@@ -1,7 +1,7 @@
 // Copyright 2021 Cameron Benassi @ UML. All rights reserved.
 
-#ifndef CircularBuffer_h
-#define CircularBuffer_h
+#ifndef SOPHOMORE_YEAR_COMPUTING_4_PS4B_CIRCULARBUFFER_H_
+#define SOPHOMORE_YEAR_COMPUTING_4_PS4B_CIRCULARBUFFER_H_
 
 #include <stdint.h>
 #include <vector>
@@ -21,4 +21,4 @@ class CircularBuffer{
 };
 
 
-#endif  // _HOME_CAMBENASSI_DOCUMENTS_CODE_COMPUTING_IV_PS4A_CIRCULARBUFFER_H_
+#endif  // SOPHOMORE_YEAR_COMPUTING_4_PS4B_CIRCULARBUFFER_H_

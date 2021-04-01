@@ -1,7 +1,7 @@
 // Copyright 2021 Cameron Benassi @ UML. All rights reserved.
 
-#ifndef StringSound_h
-#define StringSound_h
+#ifndef SOPHOMORE_YEAR_COMPUTING_4_PS4B_STRINGSOUND_H_
+#define SOPHOMORE_YEAR_COMPUTING_4_PS4B_STRINGSOUND_H_
 
 #include <vector>
 
@@ -14,7 +14,7 @@ class StringSound {
     // constructors & destructor
     explicit StringSound(double frequency);
     explicit StringSound(std::vector<sf::Int16> init);
-    StringSound (const StringSound& obj) {};
+    StringSound(const StringSound& obj) {}
     ~StringSound();
     // Member functions
     void pluck();
@@ -27,4 +27,4 @@ class StringSound {
     int _time;
 };
 
-#endif  // file path
+#endif  // SOPHOMORE_YEAR_COMPUTING_4_PS4B_STRINGSOUND_H_

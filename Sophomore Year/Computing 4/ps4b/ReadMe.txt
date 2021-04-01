@@ -42,7 +42,8 @@ No, I did not think that they were necessary for the path I took.
  *  Did your code pass cpplint?
  *  Indicate yes or no, and explain how you did it.
  **********************************************************************/
-Not yet, but I will have it pass very soon.
+Yes it does, I followed the procedures it gave me, along with fixing
+the errors it threw about whitespace, include rules, and header names.
 
 /**********************************************************************
  *  List whatever help (if any) you received from TAs,
