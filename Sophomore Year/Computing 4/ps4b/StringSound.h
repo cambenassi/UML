@@ -15,7 +15,7 @@ class StringSound {
     explicit StringSound(double frequency);
     explicit StringSound(std::vector<sf::Int16> init);
     StringSound (const StringSound& obj) {};
-    //~StringSound();
+    ~StringSound();
     // Member functions
     void pluck();
     void tic();

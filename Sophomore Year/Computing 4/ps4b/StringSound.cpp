@@ -15,8 +15,6 @@ StringSound::StringSound(double frequency) {
     }
 
     _time = 0;
-
-    //delete _cb;
 }
 
 StringSound::StringSound(std::vector<sf::Int16> init){
@@ -27,8 +25,10 @@ StringSound::StringSound(std::vector<sf::Int16> init){
     }
 
     _time = 0;
+}
 
-    //delete _cb;
+StringSound::~StringSound(){
+    delete _cb;
 }
 
 // Member functions
@@ -49,7 +49,7 @@ void StringSound::tic(){
     first = _cb->dequeue();
     second = _cb->peek();
 
-    _cb->enqueue((int16_t).996 * .5 * (first + second));
+    _cb->enqueue(.996 * .5 * (first + second));
 
 }
 

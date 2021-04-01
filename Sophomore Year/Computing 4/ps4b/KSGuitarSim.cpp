@@ -25,23 +25,20 @@ std::vector<sf::Int16> makeSamples(StringSound &gs);
 int main(int argc, char* argv[]){
     sf::RenderWindow window(sf::VideoMode(300, 200), "SFML Plucked String Sound Lite");
     sf::Event event;
-    sf::Sound tempSound;
     sf::SoundBuffer tempBuf;
     std::vector<sf::Int16> samples;
-    std::vector<sf::Sound> sounds;
+    std::vector<sf::Sound> sounds(37);
+    std::vector<sf::SoundBuffer> buffs(37);
     std::string keys = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
     double freq;
 
-    for(long unsigned int i = 0; i < keys.size(); i++){
-        freq = CONCERT * pow(2, (i - 24) / 12);
+    for(int i = 0; i < keys.size(); i++){
+        freq = CONCERT * pow(2, (i - 24) / 12.0);
         StringSound tempStringSound(freq);
 
         samples = makeSamples(tempStringSound);
-        tempBuf.loadFromSamples(&samples[i], samples.size(), 2, SAMPLES_PER_SEC);
-        tempSound.setBuffer(tempBuf);
-        sounds.push_back(tempSound);
-
-        samples.clear();
+        buffs[i].loadFromSamples(&samples[i], samples.size(), 2, SAMPLES_PER_SEC);
+        sounds[i].setBuffer(buffs[i]);
     }
 
     while (window.isOpen()){
@@ -60,8 +57,8 @@ int main(int argc, char* argv[]){
         			}
       			}
     		}
-	window.clear();
- 	window.display();
+	    window.clear();
+ 	    window.display();
   	}
 
     return 0;
