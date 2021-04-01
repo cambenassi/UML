@@ -32,8 +32,9 @@ int main(int argc, char* argv[]){
     std::string keys = "q2we4r5ty7u8i9op-[=zxdcfvgbnjmk,.;/' ";
     double freq;
 
-    for(int i = 0; i < keys.size(); i++){
-        freq = CONCERT * pow(2, (i - 24) / 12.0);
+    for(long unsigned int i = 0; i < keys.size(); i++){
+        int avoidLongInt = i;
+        freq = CONCERT * pow(2, (avoidLongInt - 24) / 12.0);
         StringSound tempStringSound(freq);
 
         samples = makeSamples(tempStringSound);
