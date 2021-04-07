@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++11 -c -g -Og -Wall -Werror -pedantic
+CFLAGS = -std=c++17 -c -g -Og -Wall -Werror -pedantic
 OBJ =  KSGuitarSim.o CircularBuffer.o StringSound.o
 DEPS =  KSGuitarSim.cpp CircularBuffer.cpp CircularBuffer.h StringSound.cpp StringSound.h
 LIBS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system

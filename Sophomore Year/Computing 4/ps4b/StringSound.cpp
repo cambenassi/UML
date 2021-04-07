@@ -3,6 +3,8 @@
 #include "StringSound.h"
 
 #include <math.h>
+#include <stdlib.h>
+#include <random>
 
 #include <iostream>
 
@@ -18,11 +20,13 @@ StringSound::StringSound(double frequency) {
 }
 
 StringSound::StringSound(std::vector<sf::Int16> init) {
+    if (init.empty())
+        throw std::bad_alloc();
+
     _cb = new CircularBuffer(init.size());
 
-    for (int16_t i = 0; i < init.size(); i++) {
-        _cb->enqueue(init.at(i));
-    }
+    std::for_each(init.begin(), init.end(),
+        [this, init](unsigned int i){_cb->enqueue(init[i]);});
 
     _time = 0;
 }
@@ -36,8 +40,10 @@ void StringSound::pluck() {
     while (!_cb->isEmpty())
         _cb->dequeue();
 
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> distribution(-32768, 32767);
     while (!_cb->isFull()) {
-        int random = rand_r() % (32767 + 1 - -32768) + -32768;
+        int random = distribution(generator);
         _cb->enqueue(random);
     }
 }

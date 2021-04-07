@@ -13,29 +13,33 @@ Hours to complete assignment : 2.5
  *  Indicate which parts you think are working, and describe
  *    how you know that they're working.
  **********************************************************************/
-Yes, I did complete the whole assignment. There is one main bug, where the 
-keyboard is backwards, but I will fix that very soon, for PSX.
+Yes, I did complete the whole assignment successfully. All parts, including
+input, output and correct implementation are present.
 
 
 /**********************************************************************
  *  Did you attempt the extra credit parts? Which one(s)?
  *  Successfully or not?  
  **********************************************************************/
-I did not attempt any.
+Yes, I attempted to change the sound depending on the command line arguments,
+specifically to a harp. If the user runns the program with the command line argument
+"harp" (./KSGuitarSim harp), then the pitch of the sound will be shifted up, causing 
+a harp sound versus the original guitar sound.
 
 /**********************************************************************
  *  Did you implement exseptions to check your StringSound 
  *	implementation?
  *  Indicate yes or no, and explain how you did it.
  **********************************************************************/
-I did not implement any yet, but will in the future.
+Yes, I implemented a std::bad_alloc if the init vector is empty.
 
 
 /**********************************************************************
  *  Did you implement lambda expression?
  *  Indicate yes or no, and explain how you did it.
  **********************************************************************/
-No, I did not think that they were necessary for the path I took.
+Yes, I added one in the StringSound(std::vector<sf::Int16> init) constructor,
+where it uses std::for_each and pushes each value of init into _cb.
 
 
 /**********************************************************************
@@ -55,7 +59,7 @@ none
 /**********************************************************************
  *  Describe any serious problems you encountered.                    
  **********************************************************************/
-Keyboard is backwards
+none
 
 /**********************************************************************
  *  List any other comments here.                                     

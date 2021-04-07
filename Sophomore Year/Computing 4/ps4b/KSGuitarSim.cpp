@@ -16,11 +16,15 @@
 #include "StringSound.h"
 
 #define SAMPLES_PER_SEC 44100
-#define CONCERT 440.0
 
 std::vector<sf::Int16> makeSamples(StringSound* gs);
 
 int main(int argc, char* argv[]) {
+    double CONCERT = 440.0;
+    if (argv[1])
+      if (!strcmp(argv[1], "harp"))
+        CONCERT = 140.0;
+
     sf::RenderWindow window(sf::VideoMode(300, 200),
     "SFML Plucked String Sound Lite");
     sf::Event event;
