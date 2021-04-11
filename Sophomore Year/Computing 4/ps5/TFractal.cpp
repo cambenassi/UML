@@ -2,11 +2,18 @@
 
 #include <iostream>
 
-int main(int argc, char* argv[]) {
-    double length = (argv[1]);
-    int depth = (argv[2]);
+#include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <SFML/Window.hpp>
 
-    std::cout << length << " " << depth << std::endl;
+#include "Triangle.h"
+
+int main(int argc, char* argv[]) {
+    if (argc != 3)
+        return 1;
+
+    Triangle tree(atof(argv[1]), atof(argv[2]));
 
 
     return 0;
