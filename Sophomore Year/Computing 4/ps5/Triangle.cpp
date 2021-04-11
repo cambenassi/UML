@@ -9,15 +9,19 @@
 #include "Triangle.h"
 
 // Constructor
-Triangle::Triangle(double userLength, int userDepth) {
-    length = userLength;
-    depth = userDepth;
+Triangle::Triangle(double sideLength) {
+    length = sideLength;
+
+    sf::VertexArray temp(sf::LineStrip, 4);
+    temp[0].position = sf::Vector2f(150.f, 150.f);
+    temp[1].position = sf::Vector2f(450.f, 150.f);
+    temp[2].position = sf::Vector2f(300.f, 400.f);
+    temp[3].position = temp[0].position;
+
+    triangle = temp;
 }
 
 // Member Functions
-void Triangle::fTree() {
-}
-
 void Triangle::draw(sf::RenderTarget& window, sf::RenderStates states) const {
     // window.draw(triangle_texture);
 }
