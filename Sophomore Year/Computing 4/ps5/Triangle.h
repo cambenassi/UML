@@ -9,10 +9,10 @@
 
 class Triangle : public sf::Drawable{
  public:
-    explicit Triangle(double sideLength);
+    explicit Triangle(double sideLength, double x, double y);
     sf::VertexArray triangle;
+    double length, centerX, centerY;
  private:
-    double length;
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;  // NOLINT
 };
 
