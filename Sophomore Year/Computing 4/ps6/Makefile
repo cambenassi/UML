@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -std=c++11 -c -g -Og -Wall -Werror -pedantic
 OBJ =  main.o
 DEPS =  main.cpp
-LIBS = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
+LIBS = -lboost_regex
 EXE = ps6
 
 
@@ -17,4 +17,4 @@ all: $(OBJ)
 
 
 clean:
-	rm $(OBJ) $(EXE)
+	rm $(OBJ) $(EXE) *.rpt
