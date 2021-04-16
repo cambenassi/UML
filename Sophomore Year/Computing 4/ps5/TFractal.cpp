@@ -34,6 +34,9 @@ int main(int argc, char* argv[]) {
     }
 
     return 0;
+    
+    
+    
 }
 
 void fTree(std::vector<Triangle> &triangleVec, sf::RenderWindow &window, int &depth, double &length) {  // NOLINT
