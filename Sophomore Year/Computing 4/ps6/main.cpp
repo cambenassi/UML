@@ -22,12 +22,12 @@ int main(int argc, char* argv[]) {
     while (std::getline(input, temp)) {
         if (std::regex_search(temp, smatches, startup)) {
             fprintf(output, "\nStartup - Line: %d\tDate & Time: NYI\nStatus - ", numScanned); //NOLINT
-            start = true;
+            // store date & time into temp
         }
         if (start && std::regex_search(temp, smatches, success)) {
             fprintf(output, "Success, finished on line %d", numScanned); //NOLINT
             start = false;
-        }  // fix failure, add date & time
+        }  // fix failure, compare with temp date & time
         numScanned++;
     }
     fprintf(output, "Lines scanned: %d", numScanned);
