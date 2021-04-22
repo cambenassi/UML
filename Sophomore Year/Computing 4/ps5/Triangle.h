@@ -12,6 +12,7 @@ class Triangle : public sf::Drawable{
     explicit Triangle(double sideLength, double x, double y);
     sf::VertexArray triangle;
     double length, centerX, centerY;
+    bool hasChildren = false;
  private:
     virtual void draw(sf::RenderTarget& window, sf::RenderStates states) const;  // NOLINT
 };

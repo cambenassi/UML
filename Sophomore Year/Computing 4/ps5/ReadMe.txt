@@ -58,8 +58,7 @@ none
  *  If you didn't complete any part of any assignment, 
  *  the things that you didn't do, or didn't get working.                  
  **********************************************************************/
-I was not able to get fractals past 3 working properly, but I will fix for
-PS X.
+none
 
 
 /**********************************************************************
