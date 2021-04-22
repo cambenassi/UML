@@ -1,8 +1,9 @@
 // Copyright 2021 Cameron Benassi @ UML. All rights reserved.
 
+#include <math.h>
+
 #include <iostream>
 
-#include <math.h>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>

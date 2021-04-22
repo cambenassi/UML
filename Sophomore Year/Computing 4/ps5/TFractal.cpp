@@ -1,9 +1,10 @@
 // Copyright 2021 Cameron Benassi @ UML. All rights reserved.
 
+#include <math.h>
+
 #include <iostream>
 #include <vector>
 
-#include <math.h>
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -29,7 +30,8 @@ int main(int argc, char* argv[]) {
             if (event.type == sf::Event::Closed)
                 window.close();
         window.clear();
-        for (long unsigned int i = 0; i < triangleVec.size(); i++)
+        int vecSize = triangleVec.size();
+        for (int i = 0; i < vecSize; i++)
             window.draw(triangleVec[i].triangle);
         window.display();
     }
