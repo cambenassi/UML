@@ -24,23 +24,25 @@ int main(int argc, char* argv[]) {
     fprintf(output, "Device Boot Report\n\nInTouch log file: %s\n-------------------------------------\n", log.c_str()); //NOLINT
 
     while (std::getline(input, temp)) {
+        if (start && boost::regex_search(temp, smatches, startup)) {
+            fprintf(output, "Status - Failure\n");
+        }
         if (boost::regex_search(temp, smatches, startup)) {
-            fprintf(output, "\nStartup - Line: %d\n", numScanned); //NOLINT
-            if (boost::regex_search(temp, smatches, date)){
-                /* does not work
-                timeStart = smatches.str();
-                boost::posix_time::ptime t1;
+            fprintf(output, "Startup on line: %d | ", numScanned); //NOLINT
+            if (boost::regex_search(temp, smatches, date)) {
+                timeStart = "2000-10-24 " + smatches.str();
                 t1 = boost::posix_time::time_from_string(timeStart);
-                */
             }
+            start = true;
         }
         if (start && boost::regex_search(temp, smatches, success)) {
-            timeEnd = smatches.str();
-            //boost::posix_time::ptime t2(boost::posix_time::time_from_string(timeEnd));
-            //boost::posix_time::time_duration td = t2 - t1;
+            timeEnd = "2000-10-24 ";
+            for (int i = 11; i < 19; i++)
+                timeEnd += temp[i];
 
-            // std::cout << "Status - Success, finished on line " << numScanned << ", " << td.minutes() << " minutes & " << td.seconds() << "seconds\n";
-            //fprintf(output, "Status - Success, finished on line %d, %ld minutes & %ld seconds", numScanned, td.minutes(), td.seconds()); //NOLINT
+            t2 = boost::posix_time::time_from_string(timeEnd);
+            boost::posix_time::time_duration td = t2 - t1;
+            fprintf(output, "Status - Success, finished on line %d | Duration: %ld minutes & %ld seconds\n", numScanned, td.minutes(), td.seconds()); //NOLINT
             start = false;
         }
         numScanned++;

@@ -1,0 +1,21 @@
+Device Boot Report
+
+InTouch log file: device4_intouch.log
+-------------------------------------
+Startup on line: 4 | Status - Success, finished on line 112 | Duration: 2 minutes & 45 seconds
+Startup on line: 747 | Status - Success, finished on line 855 | Duration: 2 minutes & 54 seconds
+Startup on line: 1459 | Status - Success, finished on line 1568 | Duration: 3 minutes & 3 seconds
+Startup on line: 31848 | Status - Success, finished on line 31956 | Duration: 2 minutes & 55 seconds
+Startup on line: 32789 | Status - Success, finished on line 33032 | Duration: 2 minutes & 30 seconds
+Startup on line: 33145 | Status - Success, finished on line 33390 | Duration: 2 minutes & 29 seconds
+Startup on line: 33677 | Status - Success, finished on line 33920 | Duration: 2 minutes & 28 seconds
+Startup on line: 45295 | Status - Success, finished on line 45538 | Duration: 2 minutes & 30 seconds
+Startup on line: 45615 | Status - Success, finished on line 45858 | Duration: 2 minutes & 28 seconds
+Startup on line: 46117 | Status - Success, finished on line 46353 | Duration: 2 minutes & 27 seconds
+Startup on line: 46357 | Status - Success, finished on line 46600 | Duration: 2 minutes & 30 seconds
+Startup on line: 46792 | Status - Success, finished on line 47035 | Duration: 2 minutes & 29 seconds
+Startup on line: 47700 | Status - Success, finished on line 47991 | Duration: 2 minutes & 57 seconds
+Startup on line: 48100 | Status - Success, finished on line 48341 | Duration: 2 minutes & 30 seconds
+Startup on line: 48345 | Status - Success, finished on line 48636 | Duration: 2 minutes & 57 seconds
+
+Lines scanned: 48794

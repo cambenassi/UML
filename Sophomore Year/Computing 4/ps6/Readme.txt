@@ -58,8 +58,7 @@ None
 /**********************************************************************
  *  Describe any serious problems you encountered.                    
  **********************************************************************/
-Date & Time is not working, along with failure message, boost also
-gave me some strange error messages that were hard to decypher
+none
 
 
 /**********************************************************************
