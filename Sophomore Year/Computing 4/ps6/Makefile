@@ -1,8 +1,8 @@
 CC = g++
-CFLAGS = -std=c++11 -c -g -Og -Wall -Werror -pedantic
+CFLAGS = -std=c++11 -c -g -Og -Wall -pedantic
 OBJ =  main.o
 DEPS =  main.cpp
-LIBS =
+LIBS = -lboost_regex -lboost_date_time
 EXE = ps6
 
 
